@@ -1,6 +1,5 @@
 package com.example.demo2.config;
 
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -15,6 +14,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @EnableTransactionManagement
@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 public class FirstDataSourceConfiguration {
     @Primary
-    @ConfigurationProperties(prefix = "first.datasource")
+    @ConfigurationProperties(prefix = "datasource.first")
     @Bean(name = "firstDataSource")
     public DataSource firstDataSource () {
         return DataSourceBuilder.create().build();
