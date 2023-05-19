@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,13 +26,21 @@ public class DataReplicationService {
         List<FirstWorkTimeDo> db1WorkTimeList = firstDataReplicationRepository.findAll();
 
         for (FirstWorkTimeDo workTime : db1WorkTimeList) {
+            Integer accountId = workTime.getAccountId();
+            LocalDate checkInDate = workTime.getCheckInDate();
 
-            SecondWorkTimeDo secondWorkTimeDo = new SecondWorkTimeDo();
-            secondWorkTimeDo.setAccountId(workTime.getAccountId());
-            secondWorkTimeDo.setWorkTime(workTime.getWorkTime());
-            secondWorkTimeDo.setCheckInDate(workTime.getCheckInDate());
+            SecondWorkTimeDo existingWorkTimeDo = secondDataReplicationRepository.findByAccountIdAndCheckInDate(accountId, checkInDate);
 
-            secondDataReplicationRepository.save(secondWorkTimeDo);
+            if (existingWorkTimeDo != null) {
+                existingWorkTimeDo.setWorkMinute(workTime.getWorkMinute());
+                secondDataReplicationRepository.save(existingWorkTimeDo);
+            } else {
+                SecondWorkTimeDo newWorkTime = new SecondWorkTimeDo();
+                newWorkTime.setAccountId(accountId);
+                newWorkTime.setWorkMinute(workTime.getWorkMinute());
+                newWorkTime.setCheckInDate(workTime.getCheckInDate());
+                secondDataReplicationRepository.save(newWorkTime);
+            }
         }
 
         ResponseDto<String> responseDto = new ResponseDto<>();
