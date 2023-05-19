@@ -20,8 +20,8 @@ public class FirstWorkTimeDo {
     @Column(name = "account_id")
     private Integer accountId;
 
-    @Column(name = "work_time")
-    private float workTime;
+    @Column(name = "work_minute")
+    private Integer workMinute;
 
     @Column(name = "check_in_date")
     private LocalDate checkInDate;
