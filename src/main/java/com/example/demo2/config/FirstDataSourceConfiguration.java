@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 public class FirstDataSourceConfiguration {
     @Primary
-    @ConfigurationProperties(prefix = "datasource.first")
+    @ConfigurationProperties(prefix = "spring.datasource.first")
     @Bean(name = "firstDataSource")
     public DataSource firstDataSource () {
         return DataSourceBuilder.create().build();

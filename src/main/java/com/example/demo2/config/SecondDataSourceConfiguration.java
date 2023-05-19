@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 @Configuration
 public class SecondDataSourceConfiguration {
 
-    @ConfigurationProperties(prefix = "datasource.second")
+    @ConfigurationProperties(prefix = "spring.datasource.second")
     @Bean(name = "secondDataSource")
     public DataSource secondDataSource () {
         return DataSourceBuilder.create().build();
