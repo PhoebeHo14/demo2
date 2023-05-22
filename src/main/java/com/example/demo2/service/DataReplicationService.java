@@ -1,21 +1,19 @@
-package com.example.demo2.controller.service;
+package com.example.demo2.service;
 
-import com.example.demo2.controller.pojo.ResponseDto;
 import com.example.demo2.model.first.entity.FirstWorkTimeDo;
 import com.example.demo2.model.first.repository.FirstDataReplicationRepository;
 import com.example.demo2.model.second.entity.SecondWorkTimeDo;
 import com.example.demo2.model.second.repository.SecondDataReplicationRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.demo2.pojo.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@RestController
-@Tag(name = "Check In")
+@Service
 @RequiredArgsConstructor
 public class DataReplicationService {
     private final MessageSource messageSource;

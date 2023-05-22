@@ -1,6 +1,5 @@
 package com.example.demo2.model.first.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 @Entity(name = "work_time")
 @Getter
 @Setter
-@Schema(name = "db1 工時")
 public class FirstWorkTimeDo {
 
     @Id
