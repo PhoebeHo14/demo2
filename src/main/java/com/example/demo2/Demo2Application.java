@@ -1,6 +1,6 @@
 package com.example.demo2;
 
-import com.example.demo2.controller.DataReplicationController;
+import com.example.demo2.service.DataReplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class Demo2Application implements CommandLineRunner {
-	private final DataReplicationController dataReplicationController;
+	private final DataReplicationService dataReplicationService;
 
 	public static void main(String[] args)
 	{
@@ -18,8 +18,8 @@ public class Demo2Application implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
-		dataReplicationController.replicateWorkTime();
+	public void run(String... args) {
+		dataReplicationService.start();
 	}
 
 	private static void shutdown() {
