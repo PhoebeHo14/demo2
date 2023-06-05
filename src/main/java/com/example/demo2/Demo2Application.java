@@ -3,7 +3,6 @@ package com.example.demo2;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-//import com.example.demo2.service.DataReplicationService;
 import com.example.demo2.util.ReadUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,11 +43,11 @@ public class Demo2Application implements CommandLineRunner {
 		Map<String, String> enMap = (Map)JSON.parse(enString);
 		Map<String, String> zhMap = (Map)JSON.parse(zhString);
 
-//		for (Map.Entry<String, String> entry : enMap.entrySet()) {
-//			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
-//		}
+		for (Map.Entry<String, String> entry : enMap.entrySet()) {
+			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
+		}
 
-		try (PrintWriter writer = new PrintWriter(new File("C:\\output.csv"))) {
+		try (PrintWriter writer = new PrintWriter(new File("C:\\output.csv"), StandardCharsets.UTF_8)) {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("FUNC_CODE");
@@ -59,14 +59,17 @@ public class Demo2Application implements CommandLineRunner {
 			sb.append("FUNC_NAME_TW");
 			sb.append('\n');
 
-			sb.append("101");
-			sb.append(',');
-			sb.append("John Doe");
-			sb.append(',');
-			sb.append("Las Vegas");
-			sb.append(',');
-			sb.append("Las Vegas");
-			sb.append('\n');
+			for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
+				sb.append(entry.getKey());
+				sb.append(',');
+				sb.append(enMap.get(entry.getKey()));
+				sb.append(',');
+				sb.append(zhMap.get(entry.getKey()));
+				sb.append(',');
+				sb.append(zhMap.get(entry.getKey()));
+				sb.append('\n');
+			}
+
 
 			writer.write(sb.toString());
 			writer.close();
