@@ -1,9 +1,9 @@
-package com.example.demo2.util;
+package com.example.demo2.utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class ReadUtils {
+public class IoUtils {
     public static String readJsonFile(String fileName) {
         String jsonStr = "";
         try {

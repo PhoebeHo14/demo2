@@ -3,21 +3,18 @@ package com.example.demo2;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.example.demo2.util.ReadUtils;
-import lombok.RequiredArgsConstructor;
+import com.alibaba.fastjson2.TypeReference;
+import com.example.demo2.utils.IoUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-@SpringBootApplication
-@RequiredArgsConstructor
 public class Demo2Application implements CommandLineRunner {
 //	private final DataReplicationService dataReplicationService;
 
@@ -28,9 +25,9 @@ public class Demo2Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		String sidebarString = ReadUtils.readJsonFile("C:\\rawdata\\sidebar.json");
-		String enString = ReadUtils.readJsonFile("C:\\rawdata\\general-en.json");
-		String zhString = ReadUtils.readJsonFile("C:\\rawdata\\general-zh.json");
+		String sidebarString = IoUtils.readJsonFile("C:\\rawdata\\sidebar.json");
+		String enString = IoUtils.readJsonFile("C:\\rawdata\\general-en.json");
+		String zhString = IoUtils.readJsonFile("C:\\rawdata\\general-zh.json");
 
 		JSONArray sidebarArray = JSONArray.parseArray(sidebarString);
 		JSONObject enFunc = JSON.parseObject(enString);
@@ -40,12 +37,14 @@ public class Demo2Application implements CommandLineRunner {
 //		for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
 //			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
 //		}
-		Map<String, String> enMap = (Map)JSON.parse(enString);
-		Map<String, String> zhMap = (Map)JSON.parse(zhString);
+		Map<String, String> enMap = JSON.parseObject(enString, new TypeReference<>() {
+		});
+		Map<String, String> zhMap = JSON.parseObject(zhString, new TypeReference<>() {
+		});
 
-		for (Map.Entry<String, String> entry : enMap.entrySet()) {
-			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
-		}
+//		for (Map.Entry<String, String> entry : zhMap.entrySet()) {
+//			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
+//		}
 
 		try (PrintWriter writer = new PrintWriter(new File("C:\\output.csv"), StandardCharsets.UTF_8)) {
 
@@ -60,7 +59,7 @@ public class Demo2Application implements CommandLineRunner {
 			sb.append('\n');
 
 			for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
-				sb.append(entry.getKey());
+				sb.append(entry.getValue());
 				sb.append(',');
 				sb.append(enMap.get(entry.getKey()));
 				sb.append(',');
@@ -70,12 +69,11 @@ public class Demo2Application implements CommandLineRunner {
 				sb.append('\n');
 			}
 
-
 			writer.write(sb.toString());
 			writer.close();
 			System.out.println("done!");
 
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 
