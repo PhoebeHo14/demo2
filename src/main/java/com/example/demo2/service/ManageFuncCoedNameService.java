@@ -1,12 +1,10 @@
-package com.example.demo2;
+package com.example.demo2.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
-import com.example.demo2.utils.IoUtils;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,51 +12,55 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateFuncSql implements CommandLineRunner {
-    public static void main(String[] args) {
-        SpringApplication.run(CreateFuncSql.class, args);
-        shutdown();
-    }
-
-    @Override
-    public void run(String... args) {
-        String sidebarString = IoUtils.readJsonFile("C:\\rawdata\\sidebar.json");
-        String enString = IoUtils.readJsonFile("C:\\rawdata\\general-en.json");
-        String zhString = IoUtils.readJsonFile("C:\\rawdata\\general-zh.json");
+@RequiredArgsConstructor
+public class ManageFuncCoedNameService {
+    private static void funcCodeAndNameToCsv() {
+        String sidebarString = com.example.demo2.utils.IoUtils.readJsonFile("C:\\rawdata\\sidebar.json");
+        String enString = com.example.demo2.utils.IoUtils.readJsonFile("C:\\rawdata\\general-en.json");
+        String zhString = com.example.demo2.utils.IoUtils.readJsonFile("C:\\rawdata\\general-zh.json");
 
         JSONArray sidebarArray = JSONArray.parseArray(sidebarString);
 
         Map<String, String> sidebarMap = convertJsonToMap(sidebarArray);
+//		for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
+//			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
+//		}
         Map<String, String> enMap = JSON.parseObject(enString, new TypeReference<>() {
         });
         Map<String, String> zhMap = JSON.parseObject(zhString, new TypeReference<>() {
         });
 
-        try (PrintWriter writer = new PrintWriter("C:\\updateSYS_REVAMP_FUNC.sql", StandardCharsets.UTF_8)) {
+//		for (Map.Entry<String, String> entry : zhMap.entrySet()) {
+//			System.out.println("Label: " + entry.getKey() + ", FuncName: " + entry.getValue());
+//		}
 
-            StringBuilder stringBuilder = new StringBuilder();
+        try (PrintWriter writer = new PrintWriter("C:\\output.csv", StandardCharsets.UTF_8)) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("FUNC_CODE");
+            sb.append(',');
+            sb.append("FUNC_NAME_EN");
+            sb.append(',');
+            sb.append("FUNC_NAME_CN");
+            sb.append(',');
+            sb.append("FUNC_NAME_TW");
+            sb.append('\n');
 
             for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
-                if (enMap != null && zhMap != null) {
-                    stringBuilder.append("UPDATE SYS_REVAMP_FUNC SET FUNC_NAME_EN='")
-                            .append(enMap.get(entry.getKey()))
-                            .append("', FUNC_NAME_CN='")
-                            .append(zhMap.get(entry.getKey()))
-                            .append("', FUNC_NAME_TW='")
-                            .append(zhMap.get(entry.getKey()))
-                            .append("', LAST_UPDATED_DATE=now()")
-                            .append(", LAST_UPDATED_BY='SYSTEM' WHERE FUNC_CODE='")
-                            .append(entry.getValue())
-                            .append("';")
-                            .append('\n');
-                }
+                sb.append(entry.getValue());
+                sb.append(',');
+                sb.append(enMap.get(entry.getKey()));
+                sb.append(',');
+                sb.append(zhMap.get(entry.getKey()));
+                sb.append(',');
+                sb.append(zhMap.get(entry.getKey()));
+                sb.append('\n');
             }
-            System.out.println(stringBuilder);
 
-            writer.write(stringBuilder.toString());
+            writer.write(sb.toString());
             System.out.println("done!");
-        } catch (
-                IOException e) {
+
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -93,9 +95,5 @@ public class CreateFuncSql implements CommandLineRunner {
         }
 
         return map;
-    }
-
-    private static void shutdown() {
-        System.exit(0);
     }
 }
