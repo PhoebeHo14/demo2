@@ -6,12 +6,14 @@ import com.example.demo2.model.SysRevampRoleFuncDo;
 import com.example.demo2.model.SysRoleFuncDo;
 import com.example.demo2.pojo.RoleFuncDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MergeFuncRoleService {
     private final SysRoleFuncRepository sysRoleFuncRepository;
     private final SysRevampRoleFuncRepository sysRevampRoleFuncRepository;
@@ -40,21 +42,27 @@ public class MergeFuncRoleService {
     }
 
     public void checkMergeFuncRole(RoleFuncDto roleFuncDto) {
-            String roleCode = roleFuncDto.getRoleCode();
-            String funcCode = roleFuncDto.getFuncCode();
+        String roleCode = roleFuncDto.getRoleCode();
+        String funcCode = roleFuncDto.getFuncCode();
 
 //             Check if roleId and funcId exist in SYS_ROLE_FUNC
-            SysRoleFuncDo sysRoleFuncDo = sysRoleFuncRepository.findByRoleCodeAndFuncCode(roleCode, funcCode);
-            boolean canViewSysRole = sysRoleFuncDo != null && sysRoleFuncDo.getCanView().equals("Y");
+        SysRoleFuncDo sysRoleFuncDo = sysRoleFuncRepository.findByRoleCodeAndFuncCode(roleCode, funcCode);
+        boolean canViewSysRole = sysRoleFuncDo != null && sysRoleFuncDo.getCanView().equals("Y");
+        if (sysRoleFuncDo == null) {
+            log.error("It doesn't exist in 1.0 !!!");
+        }
 
 //             Check if roleId and funcId exist in SYS_REVAMP_ROLE_FUNC
-            SysRevampRoleFuncDo sysRevampRoleFuncDo = sysRevampRoleFuncRepository.findByRoleCodeAndFuncCode(roleCode, funcCode);
-            boolean activeSysRevampRole = sysRevampRoleFuncDo != null && sysRevampRoleFuncDo.getActive() == 1;
+        SysRevampRoleFuncDo sysRevampRoleFuncDo = sysRevampRoleFuncRepository.findByRoleCodeAndFuncCode(roleCode, funcCode);
+        boolean activeSysRevampRole = sysRevampRoleFuncDo != null && sysRevampRoleFuncDo.getActive() == 1;
+        if (sysRevampRoleFuncDo == null) {
+            log.error("It doesn't exist in 2.0 !!!");
+        }
 
         System.out.println("Role Code: " + roleCode);
-            System.out.println("Func Code: " + funcCode);
-            System.out.println("SYS_ROLE_FUNC - canView: " + (canViewSysRole ? "Y" : "N"));
-            System.out.println("SYS_REVAMP_ROLE_FUNC - active: " + (activeSysRevampRole ? "1" : "0"));
-            System.out.println();
-        }
+        System.out.println("Func Code: " + funcCode);
+        System.out.println("SYS_ROLE_FUNC - canView: " + (canViewSysRole ? "Y" : "N"));
+        System.out.println("SYS_REVAMP_ROLE_FUNC - active: " + (activeSysRevampRole ? "1" : "0"));
+        System.out.println();
+    }
     }
