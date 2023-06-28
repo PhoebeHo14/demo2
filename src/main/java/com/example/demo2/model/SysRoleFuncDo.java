@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class SysRoleFuncDo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Integer id;
 
     @Column(name = "ROLE_ID")

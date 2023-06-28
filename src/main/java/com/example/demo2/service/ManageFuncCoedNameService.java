@@ -49,11 +49,11 @@ public class ManageFuncCoedNameService {
             for (Map.Entry<String, String> entry : sidebarMap.entrySet()) {
                 sb.append(entry.getValue());
                 sb.append(',');
-                sb.append(enMap.get(entry.getKey()));
+                sb.append(enMap != null ? enMap.get(entry.getKey()) : null);
                 sb.append(',');
-                sb.append(zhMap.get(entry.getKey()));
+                sb.append(zhMap != null ? zhMap.get(entry.getKey()) : null);
                 sb.append(',');
-                sb.append(zhMap.get(entry.getKey()));
+                sb.append(zhMap != null ? zhMap.get(entry.getKey()) : null);
                 sb.append('\n');
             }
 

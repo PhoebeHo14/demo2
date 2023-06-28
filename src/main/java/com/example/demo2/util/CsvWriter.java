@@ -1,5 +1,6 @@
 package com.example.demo2.util;
 
+import com.example.demo2.pojo.MergedRoleFuncDto;
 import com.example.demo2.pojo.RoleFuncDto;
 
 import java.io.FileWriter;
@@ -12,22 +13,18 @@ public class CsvWriter {
 
     private CsvWriter(){}
 
-    public static void writeRoleFuncDtoListToCsv(List<RoleFuncDto> roleFuncDtoList) {
+    public static void writeRoleFuncDtoListToCsv(List<MergedRoleFuncDto> roleFuncDtoList) {
         try (FileWriter writer = new FileWriter(CSV_FILE_PATH)) {
             // Write header
-            writer.append("FuncNameEn").append(CSV_SEPARATOR)
-                    .append("FuncCode").append(CSV_SEPARATOR)
-                    .append("RoleName").append(CSV_SEPARATOR)
-                    .append("RoleCode").append(CSV_SEPARATOR)
+            writer.append("FUNC_NAME(FUNC_CODE)").append(CSV_SEPARATOR)
+                    .append("ROLE_NAME(ROLE_CODE)").append(CSV_SEPARATOR)
                     .append("SLA").append('\n');
 
             // Write data
-            for (RoleFuncDto roleFuncDto : roleFuncDtoList) {
-                writer.append(roleFuncDto.getFuncNameEn()).append(CSV_SEPARATOR)
-                        .append(roleFuncDto.getFuncCode()).append(CSV_SEPARATOR)
-                        .append(roleFuncDto.getRoleName()).append(CSV_SEPARATOR)
-                        .append(roleFuncDto.getRoleCode()).append(CSV_SEPARATOR)
-                        .append(roleFuncDto.getSla()).append('\n');
+            for (MergedRoleFuncDto mergedRoleFuncDto : roleFuncDtoList) {
+                writer.append(mergedRoleFuncDto.getFunc()).append(CSV_SEPARATOR)
+                        .append("\"").append(mergedRoleFuncDto.getRole()).append("\"").append(CSV_SEPARATOR)
+                        .append(mergedRoleFuncDto.getSla()).append('\n');
             }
 
             writer.flush();

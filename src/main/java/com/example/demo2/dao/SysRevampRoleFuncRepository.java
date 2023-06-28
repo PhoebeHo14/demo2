@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SysRevampRoleFuncRepository extends JpaRepository<SysRevampRoleFuncDo, Integer> {
 
@@ -16,4 +18,6 @@ public interface SysRevampRoleFuncRepository extends JpaRepository<SysRevampRole
             "WHERE sr.ROLE_CODE = :roleCode AND rf.FUNC_CODE = :funcCode")
     SysRevampRoleFuncDo findByRoleCodeAndFuncCode(@Param("roleCode") String roleCode, @Param("funcCode") String funcCode);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM SYS_REVAMP_ROLE_FUNC r WHERE r.ACTIVE = :activeValue")
+    List<SysRevampRoleFuncDo> findByActive(@Param("activeValue") int i);
 }
